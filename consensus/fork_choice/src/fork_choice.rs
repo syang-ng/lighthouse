@@ -1149,6 +1149,14 @@ where
             });
         }
 
+        let log = logging::test_logger();
+        info!(
+            log,
+            "Fork choice on_tick";
+            "previous_slot" => previous_slot,
+            "time" => time,
+        );
+
         // Update store time.
         store.set_current_slot(time);
 
@@ -1178,7 +1186,7 @@ where
         )?;
 
         let duration = start.elapsed();
-        let log = logging::test_logger();
+
         info!(
             log,
             "Fork choice store updated (slot 0)";
