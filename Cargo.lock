@@ -2774,6 +2774,7 @@ dependencies = [
  "beacon_chain",
  "eth2_ssz",
  "eth2_ssz_derive",
+ "logging",
  "proto_array",
  "slog",
  "state_processing",
