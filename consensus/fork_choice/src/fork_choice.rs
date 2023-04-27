@@ -1,4 +1,5 @@
 use crate::{ForkChoiceStore, InvalidationOperation};
+use logging::test_logger;
 use proto_array::{
     Block as ProtoBlock, DisallowedReOrgOffsets, ExecutionStatus, ProposerHeadError,
     ProposerHeadInfo, ProtoArrayForkChoice, ReOrgThreshold,
