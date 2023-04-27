@@ -3,7 +3,7 @@ use proto_array::{
     Block as ProtoBlock, DisallowedReOrgOffsets, ExecutionStatus, ProposerHeadError,
     ProposerHeadInfo, ProtoArrayForkChoice, ReOrgThreshold,
 };
-use slog::{crit, debug, warn, Logger};
+use slog::{crit, debug, info, warn, Logger};
 use ssz_derive::{Decode, Encode};
 use state_processing::{
     per_block_processing::errors::AttesterSlashingValidationError, per_epoch_processing,
@@ -11,6 +11,7 @@ use state_processing::{
 use std::cmp::Ordering;
 use std::collections::BTreeSet;
 use std::marker::PhantomData;
+use std::time::Instant;
 use std::time::Duration;
 use types::{
     consts::merge::INTERVALS_PER_SLOT, AbstractExecPayload, AttestationShufflingId,
@@ -1164,6 +1165,8 @@ where
             return Ok(());
         }
 
+        let start = Instant::now();
+
         // Update the justified/finalized checkpoints based upon the
         // best-observed unrealized justification/finality.
         let unrealized_justified_checkpoint = *self.fc_store.unrealized_justified_checkpoint();
@@ -1172,6 +1175,15 @@ where
             unrealized_justified_checkpoint,
             unrealized_finalized_checkpoint,
         )?;
+
+        let duration = start.elapsed();
+        let log = logging::test_logger();
+        info!(
+            log,
+            "Fork choice store updated (slot 0)";
+            "time" => time,
+            "duration" => ?duration,
+        );
 
         Ok(())
     }
